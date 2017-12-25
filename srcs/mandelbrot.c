@@ -6,7 +6,7 @@
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/24 18:54:06 by adleau            #+#    #+#             */
-/*   Updated: 2017/12/25 07:05:10 by adleau           ###   ########.fr       */
+/*   Updated: 2017/12/25 11:42:03 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ int				**init_wintab(void)
 
 void			init_env(t_mand *mand)
 {
+	mand->env->mlx = NULL;
+	mand->env->win = NULL;
+	mand->env->img = NULL;
 	if (!(mand->env->mlx = mlx_init()))
 		free_mand(mand, 1);
 	if (!(mand->env->win = mlx_new_window(mand->env->mlx, WIN_WD, WIN_HT, "fractol")))
@@ -87,19 +90,21 @@ t_vec			**init_eqtab(void)
 
 void			mandelbrot(void)
 {
-	t_mand		*mand;
+	t_mand		mand;
 
-	if (!(mand = (t_mand*)malloc(sizeof(t_mand))))
+	mand.win_tab = NULL;
+	if (!(mand.win_tab = init_wintab()))
 		return ;
-	if (!(mand->win_tab = init_wintab()))
+	mand.eq_tab = NULL;
+	if (!(mand.eq_tab = init_eqtab()))
 		return ;
-	if (!(mand->eq_tab = init_eqtab()))
-		return ;
-	if (!(mand->env = (t_env*)malloc(sizeof(t_env))))
-		free_mand(mand, 1);
-	init_env(mand);
-	if (!(mand->par = (t_params*)malloc(sizeof(t_params))))
-		free_mand(mand, 1);
-	init_par(mand);
-	mand_draw(mand);
+	mand.env = NULL;
+	if (!(mand.env = (t_env*)malloc(sizeof(t_env))))
+		free_mand(&mand, 1);
+	init_env(&mand);
+	mand.par = NULL;
+	if (!(mand.par = (t_params*)malloc(sizeof(t_params))))
+		free_mand(&mand, 1);
+	init_par(&mand);
+	mand_draw(&mand);
 }
