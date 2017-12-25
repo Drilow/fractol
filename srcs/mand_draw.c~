@@ -6,7 +6,7 @@
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/24 19:26:49 by adleau            #+#    #+#             */
-/*   Updated: 2017/12/25 16:11:12 by adleau           ###   ########.fr       */
+/*   Updated: 2017/12/25 11:55:45 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void		init_par(t_mand *mand)
 	mand->par->zoomx = WIN_WD / (mand->par->x2 - mand->par->x1);
 	mand->par->zoomy = WIN_HT / (mand->par->y2 - mand->par->y1);
 	mand->par->it = 1;
-	mand->par->mul = .075;
 	if (!(mand->par->color = (int*)malloc(sizeof(int) * MAX_IT)))
 		free_mand(mand, 1);
 	i = -1;
@@ -113,11 +112,10 @@ int			mousehook_f(int button, int x, int y, t_mand *mand)
 	if (button == 1)
 	{
 		mand->par->it *= 2;
-		mand->par->x1 = mand->eq_tab[y][x].x - mand->par->mul;
-		mand->par->x2 = mand->eq_tab[y][x].x + mand->par->mul;
-		mand->par->y1 = mand->eq_tab[y][x].y - mand->par->mul;
-		mand->par->y2 = mand->eq_tab[y][x].y + mand->par->mul;
-		mand->par->mul /= 10;
+		mand->par->x1 = mand->eq_tab[y][x].x - .75;
+		mand->par->x2 = mand->eq_tab[y][x].x + .75;
+		mand->par->y1 = mand->eq_tab[y][x].y - .75;
+		mand->par->y2 = mand->eq_tab[y][x].y + .75;
 		while (++i < WIN_HT)
 		{
 			j = -1;
@@ -130,17 +128,16 @@ int			mousehook_f(int button, int x, int y, t_mand *mand)
 		}
 		mand->par->zoomx = WIN_WD / (mand->par->x2 - mand->par->x1);
 		mand->par->zoomy = WIN_HT / (mand->par->y2 - mand->par->y1);
-//		mand->par->zoomx *= 2;
-//		mand->par->zoomy *= 2;
+		mand->par->zoomx *= 1.5;
+		mand->par->zoomy *= 1.5;
 		redraw(mand);
 	}
 	if (button == 2)
 	{
-		mand->par->x1 = mand->eq_tab[y][x].x + mand->par->mul;
-		mand->par->x2 = mand->eq_tab[y][x].x - mand->par->mul;
-		mand->par->y1 = mand->eq_tab[y][x].y + mand->par->mul;
-		mand->par->y2 = mand->eq_tab[y][x].y - mand->par->mul;
-		mand->par->mul *= 10;
+		mand->par->x1 = mand->eq_tab[y][x].x + .75;
+		mand->par->x2 = mand->eq_tab[y][x].x - .75;
+		mand->par->y1 = mand->eq_tab[y][x].y + .75;
+		mand->par->y2 = mand->eq_tab[y][x].y - .75;
 		while (++i < WIN_HT)
 		{
 			j = -1;
@@ -155,8 +152,8 @@ int			mousehook_f(int button, int x, int y, t_mand *mand)
 			mand->par->it /= 2;
 		mand->par->zoomx = WIN_WD / (mand->par->x2 - mand->par->x1);
 		mand->par->zoomy = WIN_HT / (mand->par->y2 - mand->par->y1);
-//		mand->par->zoomx /= 2;
-//		mand->par->zoomy /= 2;
+		mand->par->zoomx /= 1.5;
+		mand->par->zoomy /= 1.5;
 		redraw(mand);
 	}
 	return (0);

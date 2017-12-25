@@ -6,7 +6,7 @@
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/24 18:54:39 by adleau            #+#    #+#             */
-/*   Updated: 2017/12/25 15:57:04 by adleau           ###   ########.fr       */
+/*   Updated: 2017/12/25 06:56:51 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ typedef struct	s_params
 	double	zoomx;
 	double	zoomy;
 	double	it;
-	double	mul;
 	int		*color;
 }				t_params;
 
