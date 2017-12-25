@@ -6,7 +6,7 @@
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/24 18:54:06 by adleau            #+#    #+#             */
-/*   Updated: 2017/12/24 19:34:25 by adleau           ###   ########.fr       */
+/*   Updated: 2017/12/25 07:05:10 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int				**init_wintab(void)
 	return (tab);
 }
 
-t_env			*init_env(t_mand *mand)
+void			init_env(t_mand *mand)
 {
 	if (!(mand->env->mlx = mlx_init()))
 		free_mand(mand, 1);
@@ -60,19 +60,46 @@ t_env			*init_env(t_mand *mand)
 		free_mand(mand, 1);
 	if (!(mand->env->img = mlx_new_image(mand->env->mlx, WIN_WD, WIN_HT)))
 		free_mand(mand, 1);
-	return (mand->env);
+}
+
+t_vec			**init_eqtab(void)
+{
+	int			i;
+	int			j;
+	t_vec		**tab;
+
+	i = -1;
+	if (!(tab = (t_vec**)malloc(sizeof(t_vec*) * WIN_HT)))
+		return (NULL);
+	while (++i < WIN_WD)
+	{
+		j = -1;
+		if (!(tab[i] = (t_vec*)malloc(sizeof(t_vec) * WIN_WD)))
+			return (NULL);
+		while (++j < WIN_WD)
+		{
+			tab[i][j].x = 0;
+			tab[i][j].y = 0;
+		}
+	}
+	return (tab);
 }
 
 void			mandelbrot(void)
 {
-	t_mand		mand;
+	t_mand		*mand;
 
-	if (!(mand.win_tab = init_wintab()))
+	if (!(mand = (t_mand*)malloc(sizeof(t_mand))))
 		return ;
-	mand.env = NULL;
-	if (!(mand.env = (t_env*)malloc(sizeof(t_env))))
-		free_mand(&mand, 1);
-	if (!(mand.env = init_env(&mand)))
-		free_mand(&mand, 1);
-	mand_draw(&mand);
+	if (!(mand->win_tab = init_wintab()))
+		return ;
+	if (!(mand->eq_tab = init_eqtab()))
+		return ;
+	if (!(mand->env = (t_env*)malloc(sizeof(t_env))))
+		free_mand(mand, 1);
+	init_env(mand);
+	if (!(mand->par = (t_params*)malloc(sizeof(t_params))))
+		free_mand(mand, 1);
+	init_par(mand);
+	mand_draw(mand);
 }

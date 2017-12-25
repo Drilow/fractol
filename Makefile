@@ -6,7 +6,7 @@
 #    By: adleau <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/09 02:34:03 by adleau            #+#    #+#              #
-#    Updated: 2017/12/24 20:14:27 by adleau           ###   ########.fr        #
+#    Updated: 2017/12/25 05:47:27 by adleau           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -29,6 +29,9 @@ SRC		=	main.c				\
 			mand_draw.c			\
 			mlx_pixel_put_img.c	\
 
+HEADER	=	includes/general.h	\
+			includes/mandelbrot.h \
+
 OBJ		=	$(patsubst %.c,srcs/%.o,$(SRC))
 
 LFLAGS	=	-L$(DIR) -l$(LNAME) -Imlx/ -Lmlx -lmlx -framework OpenGL -framework Appkit
@@ -37,7 +40,7 @@ CFLAGS	+=	-Wall -Wextra -Werror -Imlx -Iincludes -Ilibft
 
 all:	$(HDR) $(MLX) $(NAME)
 
-$(NAME):	$(OBJ)
+$(NAME):	$(OBJ) $(HEADER)
 			$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LFLAGS)
 
 $(MLX):
