@@ -1,37 +1,56 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mandelbrot.c                                       :+:      :+:    :+:   */
+/*   initializing_stuff.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/12/24 18:54:06 by adleau            #+#    #+#             */
-/*   Updated: 2017/12/25 11:42:03 by adleau           ###   ########.fr       */
+/*   Created: 2018/01/04 11:36:01 by adleau            #+#    #+#             */
+/*   Updated: 2018/01/04 12:38:20 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mandelbrot.h>
-#include <libft.h>
+#include <fractal.h>
 #include <mlx.h>
 
-void			free_mand(t_mand *mand, int par)
+void		init_par_mand(t_frac *mand)
 {
-	int			i;
+	int		i;
 
+	mand->par->x1 = -2;
+	mand->par->x2 = 2;
+	mand->par->y1 = -2;
+	mand->par->y2 = 2;
+	mand->par->zoomx = WIN_WD / (mand->par->x2 - mand->par->x1);
+	mand->par->zoomy = WIN_HT / (mand->par->y2 - mand->par->y1);
+	mand->par->it = 1;
+	mand->par->mul = .075;
+	if (!(mand->par->color = (int*)malloc(sizeof(int) * MAX_IT)))
+		free_frac(mand, 1);
 	i = -1;
-	while (++i < WIN_HT)
-		free(mand->win_tab[i]);
-	free(mand->win_tab);
-	if (mand->env)
-	{
-		if (mand->env->mlx)
-			free(mand->env->mlx);
-		if (mand->env->win)
-			free(mand->env->win);
-		if (mand->env->img)
-			free(mand->env->img);
-	}
-	exit(par);
+	while (++i < MAX_IT)
+		mand->par->color[i] = 0xFF / MAX_IT * i;
+}
+
+void			mandelbrot(void)
+{
+	t_frac		mand;
+
+	mand.win_tab = NULL;
+	if (!(mand.win_tab = init_wintab()))
+		return ;
+	mand.eq_tab = NULL;
+	if (!(mand.eq_tab = init_eqtab()))
+		return ;
+	mand.env = NULL;
+	if (!(mand.env = (t_env*)malloc(sizeof(t_env))))
+		free_frac(&mand, 1);
+	init_env(&mand);
+	mand.par = NULL;
+	if (!(mand.par = (t_params*)malloc(sizeof(t_params))))
+		free_frac(&mand, 1);
+	init_par_mand(&mand);
+	mand_draw(&mand);
 }
 
 int				**init_wintab(void)
@@ -52,17 +71,17 @@ int				**init_wintab(void)
 	return (tab);
 }
 
-void			init_env(t_mand *mand)
+void			init_env(t_frac *mand)
 {
 	mand->env->mlx = NULL;
 	mand->env->win = NULL;
 	mand->env->img = NULL;
 	if (!(mand->env->mlx = mlx_init()))
-		free_mand(mand, 1);
+		free_frac(mand, 1);
 	if (!(mand->env->win = mlx_new_window(mand->env->mlx, WIN_WD, WIN_HT, "fractol")))
-		free_mand(mand, 1);
+		free_frac(mand, 1);
 	if (!(mand->env->img = mlx_new_image(mand->env->mlx, WIN_WD, WIN_HT)))
-		free_mand(mand, 1);
+		free_frac(mand, 1);
 }
 
 t_vec			**init_eqtab(void)
@@ -86,25 +105,4 @@ t_vec			**init_eqtab(void)
 		}
 	}
 	return (tab);
-}
-
-void			mandelbrot(void)
-{
-	t_mand		mand;
-
-	mand.win_tab = NULL;
-	if (!(mand.win_tab = init_wintab()))
-		return ;
-	mand.eq_tab = NULL;
-	if (!(mand.eq_tab = init_eqtab()))
-		return ;
-	mand.env = NULL;
-	if (!(mand.env = (t_env*)malloc(sizeof(t_env))))
-		free_mand(&mand, 1);
-	init_env(&mand);
-	mand.par = NULL;
-	if (!(mand.par = (t_params*)malloc(sizeof(t_params))))
-		free_mand(&mand, 1);
-	init_par(&mand);
-	mand_draw(&mand);
 }

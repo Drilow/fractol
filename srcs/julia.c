@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mand_draw.c                                        :+:      :+:    :+:   */
+/*   julia.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/12/24 19:26:49 by adleau            #+#    #+#             */
-/*   Updated: 2018/01/04 12:54:47 by adleau           ###   ########.fr       */
+/*   Created: 2018/01/04 12:35:05 by adleau            #+#    #+#             */
+/*   Updated: 2018/01/04 12:54:22 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <mlx.h>
 #include <shortcuts.h>
 
-void		draw_annex(t_frac *mand, int x, int y)
+void		draw_annex_j(t_frac *jul, int x, int y)
 {
 	double	c_r;
 	double	c_i;
@@ -24,25 +24,25 @@ void		draw_annex(t_frac *mand, int x, int y)
 	double	tmp;
 	int		i;
 
-	c_r = x / mand->par->zoomx + mand->par->x1;
-	c_i = y / mand->par->zoomy + mand->par->y1;
-	z_r = 0;
-	z_i = 0;
+	c_r = 0.285;
+	c_i = 0.01;
+	z_r = x / jul->par->zoomx + jul->par->x1;
+	z_i = y / jul->par->zoomy + jul->par->y1;
 	i = -1;
 	tmp = 0;
-	while (z_r * z_r + z_i * z_i < 4 && ++i < MAX_IT * mand->par->it)
+	while (z_r * z_r + z_i * z_i < 4 && ++i < MAX_IT * jul->par->it)
 	{
 		tmp = z_r;
 		z_r = z_r * z_r - z_i * z_i + c_r;
 		z_i = 2 * tmp * z_i + c_i;
 	}
-	mand->eq_tab[y][x].x = c_r;
-	mand->eq_tab[y][x].y = c_i;
-	if (i < MAX_IT * mand->par->it)
-		mand->win_tab[y][x] = mand->par->color[i];
+	jul->eq_tab[y][x].x = c_r;
+	jul->eq_tab[y][x].y = c_i;
+	if (i < MAX_IT * jul->par->it)
+		jul->win_tab[y][x] = jul->par->color[i];
 }
 
-void		draw_win(t_frac *mand)
+void		draw_win_j(t_frac *jul)
 {
 	t_uint	x;
 	t_uint	y;
@@ -53,13 +53,13 @@ void		draw_win(t_frac *mand)
 		x = -1;
 		while (++x < WIN_WD)
 		{
-			mlx_pixel_put_to_image(mand->env->img, x, y, mand->win_tab[y][x]);
+			mlx_pixel_put_to_image(jul->env->img, x, y, jul->win_tab[y][x]);
 		}
 	}
-	mlx_put_image_to_window(mand->env->mlx, mand->env->win, mand->env->img, 0, 0);
+	mlx_put_image_to_window(jul->env->mlx, jul->env->win, jul->env->img, 0, 0);
 }
 
-void		redraw(t_frac *mand)
+void		redraw_j(t_frac *jul)
 {
 	int		x;
 	int		y;
@@ -69,19 +69,31 @@ void		redraw(t_frac *mand)
 	{
 		y = -1;
 		while (++y < WIN_HT)
-			draw_annex(mand, x, y);
+			draw_annex_j(jul, x, y);
 	}
-	draw_win(mand);
+	draw_win_j(jul);
 }
 
-int			keyhook_f(int keycode, t_frac *mand)
+void		init_par_jul(t_frac *jul)
 {
-	if (keycode == 53)
-		free_frac(mand, 0);
-	return (0);
+	int		i;
+
+	jul->par->x1 = -2;
+	jul->par->x2 = 2;
+	jul->par->y1 = -2;
+	jul->par->y2 = 2;
+	jul->par->zoomx = WIN_WD / (jul->par->x2 - jul->par->x1);
+	jul->par->zoomy = WIN_HT / (jul->par->y2 - jul->par->y1);
+	jul->par->it = 1;
+	jul->par->mul = .075;
+	if (!(jul->par->color = (int*)malloc(sizeof(int) * MAX_IT)))
+		free_frac(jul, 1);
+	i = -1;
+	while (++i < MAX_IT)
+		jul->par->color[i] = 0xFF / MAX_IT * i;
 }
 
-int			mousehook_f(int button, int x, int y, t_frac *mand)
+int			mousehook_j(int button, int x, int y, t_frac *mand)
 {
 	int		i;
 	int		j;
@@ -109,7 +121,7 @@ int			mousehook_f(int button, int x, int y, t_frac *mand)
 		}
 		mand->par->zoomx = WIN_WD / (mand->par->x2 - mand->par->x1);
 		mand->par->zoomy = WIN_HT / (mand->par->y2 - mand->par->y1);
-		redraw(mand);
+		redraw_j(mand);
 	}
 	if (button == 2)
 	{
@@ -132,15 +144,37 @@ int			mousehook_f(int button, int x, int y, t_frac *mand)
 			mand->par->it -= 1;
 		mand->par->zoomx = WIN_WD / (mand->par->x2 - mand->par->x1);
 		mand->par->zoomy = WIN_HT / (mand->par->y2 - mand->par->y1);
-		redraw(mand);
+		redraw_j(mand);
 	}
 	return (0);
 }
 
-void		mand_draw(t_frac *mand)
+
+void		jul_draw(t_frac *jul)
 {
-	redraw(mand);
-	mlx_key_hook(mand->env->win, keyhook_f, mand);
-	mlx_mouse_hook(mand->env->win, mousehook_f, mand);
-	mlx_loop(mand->env->mlx);
+	redraw_j(jul);
+	mlx_key_hook(jul->env->win, keyhook_f, jul);
+	mlx_mouse_hook(jul->env->win, mousehook_j, jul);
+	mlx_loop(jul->env->mlx);
+}
+
+void			julia(void)
+{
+	t_frac		jul;
+
+	jul.win_tab = NULL;
+	if (!(jul.win_tab = init_wintab()))
+		return ;
+	jul.eq_tab = NULL;
+	if (!(jul.eq_tab = init_eqtab()))
+		return ;
+	jul.env = NULL;
+	if (!(jul.env = (t_env*)malloc(sizeof(t_env))))
+		free_frac(&jul, 1);
+	init_env(&jul);
+	jul.par = NULL;
+	if (!(jul.par = (t_params*)malloc(sizeof(t_params))))
+		free_frac(&jul, 1);
+	init_par_jul(&jul);
+	jul_draw(&jul);
 }

@@ -6,7 +6,7 @@
 #    By: adleau <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/09 02:34:03 by adleau            #+#    #+#              #
-#    Updated: 2017/12/25 05:47:27 by adleau           ###   ########.fr        #
+#    Updated: 2018/01/04 12:45:19 by adleau           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -25,12 +25,15 @@ MDIR	=	mlx
 MLX		=	$(MDIR)/lib$(MDIR).a
 
 SRC		=	main.c				\
-			mandelbrot.c		\
+			free_fractal.c		\
+			initializing_stuff.c\
 			mand_draw.c			\
 			mlx_pixel_put_img.c	\
+			julia.c
 
 HEADER	=	includes/general.h	\
-			includes/mandelbrot.h \
+			includes/fractal.h 	\
+			includes/shortcuts.h\
 
 OBJ		=	$(patsubst %.c,srcs/%.o,$(SRC))
 
