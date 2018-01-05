@@ -6,7 +6,7 @@
 #    By: adleau <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/09 02:34:03 by adleau            #+#    #+#              #
-#    Updated: 2018/01/04 12:45:19 by adleau           ###   ########.fr        #
+#    Updated: 2018/01/05 13:14:10 by adleau           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -27,9 +27,9 @@ MLX		=	$(MDIR)/lib$(MDIR).a
 SRC		=	main.c				\
 			free_fractal.c		\
 			initializing_stuff.c\
-			mand_draw.c			\
+			generic.c			\
 			mlx_pixel_put_img.c	\
-			julia.c
+			fractals.c			\
 
 HEADER	=	includes/general.h	\
 			includes/fractal.h 	\
@@ -39,7 +39,7 @@ OBJ		=	$(patsubst %.c,srcs/%.o,$(SRC))
 
 LFLAGS	=	-L$(DIR) -l$(LNAME) -Imlx/ -Lmlx -lmlx -framework OpenGL -framework Appkit
 
-CFLAGS	+=	-Wall -Wextra -Werror -Imlx -Iincludes -Ilibft
+CFLAGS	+=	-Wall -Wextra -Werror -Imlx -Iincludes -Ilibft -I/opt/X11/include
 
 all:	$(HDR) $(MLX) $(NAME)
 

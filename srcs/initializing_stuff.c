@@ -6,51 +6,78 @@
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 11:36:01 by adleau            #+#    #+#             */
-/*   Updated: 2018/01/04 12:38:20 by adleau           ###   ########.fr       */
+/*   Updated: 2018/01/05 13:03:09 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fractal.h>
 #include <mlx.h>
 
-void		init_par_mand(t_frac *mand)
+void		init_ctab(t_c *c)
+{
+	c[0].c_r = -0.75;
+	c[0].c_i = 0.1;
+	c[1].c_r = 0.285;
+	c[1].c_i = 0.01;
+	c[2].c_r = 0.13;
+	c[2].c_i = 0.745;
+	c[3].c_r = 0.4;
+	c[3].c_i = 0.2;
+	c[4].c_r = -1;
+	c[4].c_i = 0;
+	c[5].c_r = 0.5;
+	c[5].c_i = 0.5;
+	c[6].c_r = 0.3;
+	c[6].c_i = 0.5;
+	c[7].c_r = 0.185;
+	c[7].c_i = 0.013;
+}
+
+void		init_par(t_frac *frac)
 {
 	int		i;
 
-	mand->par->x1 = -2;
-	mand->par->x2 = 2;
-	mand->par->y1 = -2;
-	mand->par->y2 = 2;
-	mand->par->zoomx = WIN_WD / (mand->par->x2 - mand->par->x1);
-	mand->par->zoomy = WIN_HT / (mand->par->y2 - mand->par->y1);
-	mand->par->it = 1;
-	mand->par->mul = .075;
-	if (!(mand->par->color = (int*)malloc(sizeof(int) * MAX_IT)))
-		free_frac(mand, 1);
+	frac->par->x1 = -2;
+	frac->par->x2 = 2;
+	frac->par->y1 = -2;
+	frac->par->y2 = 2;
+	frac->par->zoomx = WIN_WD / (frac->par->x2 - frac->par->x1);
+	frac->par->zoomy = WIN_HT / (frac->par->y2 - frac->par->y1);
+	frac->par->it = 1;
+	frac->par->mul = .075;
+	frac->par->ind = 0;
+	if (!(frac->par->c = (t_c*)malloc(sizeof(t_c) * 8)))
+		free_frac(frac, 1);
+	init_ctab(frac->par->c);
+	if (!(frac->par->color = (int*)malloc(sizeof(int) * MAX_IT)))
+		free_frac(frac, 1);
 	i = -1;
 	while (++i < MAX_IT)
-		mand->par->color[i] = 0xFF / MAX_IT * i;
+		frac->par->color[i] = 0xFF / MAX_IT * i;
 }
 
-void			mandelbrot(void)
+void			begin(void (*f)(t_frac*, int, int), char *av)
 {
-	t_frac		mand;
+	t_frac		frac;
 
-	mand.win_tab = NULL;
-	if (!(mand.win_tab = init_wintab()))
+	frac.win_tab = NULL;
+	frac.av = av;
+	frac.lock = 0;
+	if (!(frac.win_tab = init_wintab()))
 		return ;
-	mand.eq_tab = NULL;
-	if (!(mand.eq_tab = init_eqtab()))
+	frac.eq_tab = NULL;
+	if (!(frac.eq_tab = init_eqtab()))
 		return ;
-	mand.env = NULL;
-	if (!(mand.env = (t_env*)malloc(sizeof(t_env))))
-		free_frac(&mand, 1);
-	init_env(&mand);
-	mand.par = NULL;
-	if (!(mand.par = (t_params*)malloc(sizeof(t_params))))
-		free_frac(&mand, 1);
-	init_par_mand(&mand);
-	mand_draw(&mand);
+	frac.env = NULL;
+	if (!(frac.env = (t_env*)malloc(sizeof(t_env))))
+		free_frac(&frac, 1);
+	init_env(&frac);
+	frac.par = NULL;
+	if (!(frac.par = (t_params*)malloc(sizeof(t_params))))
+		free_frac(&frac, 1);
+	init_par(&frac);
+	frac.f = (*f);
+	draw(&frac);
 }
 
 int				**init_wintab(void)
@@ -71,17 +98,17 @@ int				**init_wintab(void)
 	return (tab);
 }
 
-void			init_env(t_frac *mand)
+void			init_env(t_frac *frac)
 {
-	mand->env->mlx = NULL;
-	mand->env->win = NULL;
-	mand->env->img = NULL;
-	if (!(mand->env->mlx = mlx_init()))
-		free_frac(mand, 1);
-	if (!(mand->env->win = mlx_new_window(mand->env->mlx, WIN_WD, WIN_HT, "fractol")))
-		free_frac(mand, 1);
-	if (!(mand->env->img = mlx_new_image(mand->env->mlx, WIN_WD, WIN_HT)))
-		free_frac(mand, 1);
+	frac->env->mlx = NULL;
+	frac->env->win = NULL;
+	frac->env->img = NULL;
+	if (!(frac->env->mlx = mlx_init()))
+		free_frac(frac, 1);
+	if (!(frac->env->win = mlx_new_window(frac->env->mlx, WIN_WD, WIN_HT, "fractol")))
+		free_frac(frac, 1);
+	if (!(frac->env->img = mlx_new_image(frac->env->mlx, WIN_WD, WIN_HT)))
+		free_frac(frac, 1);
 }
 
 t_vec			**init_eqtab(void)

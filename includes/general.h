@@ -6,7 +6,7 @@
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/24 18:59:10 by adleau            #+#    #+#             */
-/*   Updated: 2017/12/25 06:35:02 by adleau           ###   ########.fr       */
+/*   Updated: 2018/01/05 13:17:38 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # define WIN_WD 1280
 # define MAX_IT 100
 # include <math.h>
+
 #include <stdio.h>
 
 typedef struct	s_env
