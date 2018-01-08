@@ -6,7 +6,7 @@
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/05 10:24:05 by adleau            #+#    #+#             */
-/*   Updated: 2018/01/08 13:04:57 by adleau           ###   ########.fr       */
+/*   Updated: 2018/01/08 14:28:50 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,13 +110,11 @@ void		zoom_in(t_frac *frac, int x, int y)
 	int		j;
 
 	i = -1;
-	frac->par->it += 1;
 	frac->par->x1 = frac->eq_tab[y][x].x - frac->par->mul;
 	frac->par->x2 = frac->eq_tab[y][x].x + frac->par->mul;
 	frac->par->y1 = frac->eq_tab[y][x].y - frac->par->mul;
 	frac->par->y2 = frac->eq_tab[y][x].y + frac->par->mul;
-	frac->par->mul /= 10;
-	printf("%f %f %f %f\n", frac->par->x1, frac->par->x2, frac->par->y1, frac->par->y2);
+	frac->par->mul -= .01;
 	while (++i < WIN_HT)
 	{
 		j = -1;
@@ -141,7 +139,7 @@ void		zoom_out(t_frac *frac, int x, int y)
 	frac->par->x2 = frac->eq_tab[y][x].x - frac->par->mul;
 	frac->par->y1 = frac->eq_tab[y][x].y + frac->par->mul;
 	frac->par->y2 = frac->eq_tab[y][x].y - frac->par->mul;
-	frac->par->mul *= 10;
+	frac->par->mul += 0.01;
 	while (++i < WIN_HT)
 	{
 		j = -1;
@@ -152,8 +150,6 @@ void		zoom_out(t_frac *frac, int x, int y)
 			frac->eq_tab[i][j].y = 0;
 		}
 	}
-	if (frac->par->it > 1)
-		frac->par->it -= 1;
 	frac->par->zoomx = WIN_WD / (frac->par->x2 - frac->par->x1);
 	frac->par->zoomy = WIN_HT / (frac->par->y2 - frac->par->y1);
 }

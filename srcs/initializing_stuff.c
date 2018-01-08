@@ -6,7 +6,7 @@
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 11:36:01 by adleau            #+#    #+#             */
-/*   Updated: 2018/01/08 13:03:53 by adleau           ###   ########.fr       */
+/*   Updated: 2018/01/08 14:22:58 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void		init_params(t_frac *frac)
 	frac->par->zoomx = WIN_WD / (frac->par->x2 - frac->par->x1);
 	frac->par->zoomy = WIN_HT / (frac->par->y2 - frac->par->y1);
 	frac->par->it = 1;
-	frac->par->mul = .05;
+	frac->par->mul = 1;
 	frac->par->ind = 0;
 	frac->par->mx = 0;
 	frac->par->my = 0;
@@ -127,7 +127,7 @@ t_vec			**init_eqtab(void)
 	i = -1;
 	if (!(tab = (t_vec**)malloc(sizeof(t_vec*) * WIN_HT)))
 		return (NULL);
-	while (++i < WIN_WD)
+	while (++i < WIN_HT)
 	{
 		j = -1;
 		if (!(tab[i] = (t_vec*)malloc(sizeof(t_vec) * WIN_WD)))
