@@ -6,7 +6,7 @@
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/05 10:24:05 by adleau            #+#    #+#             */
-/*   Updated: 2018/01/08 14:28:50 by adleau           ###   ########.fr       */
+/*   Updated: 2018/01/08 14:59:41 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void		zoom_in(t_frac *frac, int x, int y)
 	frac->par->x2 = frac->eq_tab[y][x].x + frac->par->mul;
 	frac->par->y1 = frac->eq_tab[y][x].y - frac->par->mul;
 	frac->par->y2 = frac->eq_tab[y][x].y + frac->par->mul;
-	frac->par->mul -= .01;
+	frac->par->mul -= 0.01;
 	while (++i < WIN_HT)
 	{
 		j = -1;

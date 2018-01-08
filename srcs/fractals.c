@@ -6,7 +6,7 @@
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/05 10:23:41 by adleau            #+#    #+#             */
-/*   Updated: 2018/01/08 14:22:04 by adleau           ###   ########.fr       */
+/*   Updated: 2018/01/08 14:53:46 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,11 @@ void		shitfrac_annex(t_frac *frac, int x, int y)
 	z.z_i = (y / frac->par->zoomy + frac->par->y1);
 	i = -1;
 	tmp = 0;
-	while (z.z_r * z.z_r + z.z_i * z.z_i < 4 && ++i < MAX_IT * frac->par->it)
+	while (z.z_r * z.z_r + z.z_i * z.z_i < 6 && ++i < MAX_IT * frac->par->it)
 	{
 		tmp = z.z_r;
-		z.z_r = z.z_r * z.z_r - z.z_i * z.z_i + c.c_r;
-		z.z_i = 2 * tmp * z.z_i + c.c_i;
+		z.z_r = z.z_r * z.z_r - z.z_i * z.z_i - c.c_r;
+		z.z_i = 4 * tmp * z.z_i + c.c_i;
 	}
 	frac->eq_tab[y][x].x = c.c_r;
 	frac->eq_tab[y][x].y = c.c_i;
