@@ -6,7 +6,7 @@
 /*   By: adleau <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 11:36:01 by adleau            #+#    #+#             */
-/*   Updated: 2018/01/05 13:03:09 by adleau           ###   ########.fr       */
+/*   Updated: 2018/01/08 13:03:53 by adleau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,8 @@ void		init_ctab(t_c *c)
 	c[7].c_i = 0.013;
 }
 
-void		init_par(t_frac *frac)
+void		init_params(t_frac *frac)
 {
-	int		i;
-
 	frac->par->x1 = -2;
 	frac->par->x2 = 2;
 	frac->par->y1 = -2;
@@ -44,16 +42,25 @@ void		init_par(t_frac *frac)
 	frac->par->zoomx = WIN_WD / (frac->par->x2 - frac->par->x1);
 	frac->par->zoomy = WIN_HT / (frac->par->y2 - frac->par->y1);
 	frac->par->it = 1;
-	frac->par->mul = .075;
+	frac->par->mul = .05;
 	frac->par->ind = 0;
+	frac->par->mx = 0;
+	frac->par->my = 0;
+	init_ctab(frac->par->c);
+}
+
+void		init_par(t_frac *frac)
+{
+	int		i;
+
 	if (!(frac->par->c = (t_c*)malloc(sizeof(t_c) * 8)))
 		free_frac(frac, 1);
-	init_ctab(frac->par->c);
+	init_params(frac);
 	if (!(frac->par->color = (int*)malloc(sizeof(int) * MAX_IT)))
 		free_frac(frac, 1);
 	i = -1;
 	while (++i < MAX_IT)
-		frac->par->color[i] = 0xFF / MAX_IT * i;
+		frac->par->color[i] = 0xFFFFFF / MAX_IT * i;
 }
 
 void			begin(void (*f)(t_frac*, int, int), char *av)
